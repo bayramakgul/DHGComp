@@ -187,6 +187,7 @@ namespace DHGComp1
 
             return simp1;
         }
+
         public List<string> Find_Simplex2_Adjacency()
         {
             List<string> simp2 = new List<string>();
@@ -235,8 +236,6 @@ namespace DHGComp1
                             simp2.Add($"{bt};{px};{lf}");
 
                     }
-
-
                 }
             }
 
@@ -297,11 +296,11 @@ namespace DHGComp1
         }
         public void Boundary_Op2(List<string> simp1_list, List<string> simp2_list)
         {
-            int satir = simp2_list.Count;
-            int sutun = simp1_list.Count;
+            int row = simp2_list.Count;
+            int clm = simp1_list.Count;
 
-            int[,] BoundOp2 = new int[satir, sutun];
-            for (int i = 0; i < satir; i++)
+            int[,] BoundOp2 = new int[row, clm];
+            for (int i = 0; i < row; i++)
             {
                 string str = simp2_list[i];
                 string[] ix = str.Split(new char[] { ';' });
@@ -394,14 +393,14 @@ namespace DHGComp1
 
         public int Calc_Kernel_Delta(int[,] arr)
         {
-            int satir = arr.GetLength(0);
-            int sutun = arr.GetLength(1);
+            int row = arr.GetLength(0);
+            int clm = arr.GetLength(1);
 
             int KerDelta = 0;
-            for (int i = 0; i < satir; i++)
+            for (int i = 0; i < row; i++)
             {
                 bool zero = true;
-                for (int j = 0; j < sutun; j++)
+                for (int j = 0; j < clm; j++)
                 {
                     if (arr[i, j] != 0)
                     {
