@@ -76,15 +76,15 @@ namespace DHGComp1
                         Boundary_Op1(Simp1);
                         H1 = H0 - Euler;
 
-                        output.WriteLine("Betti 0 = " + H0);
-                        output.WriteLine("Betti 1 = " + H1);
+                        output.WriteLine($"Betti 0 = {H0}");
+                        output.WriteLine($"Betti 1 = {H1}");
                         output.WriteLine();
-                        output.WriteLine("Euler Charcteristic = " + Euler);
+                        output.WriteLine($"Euler Charcteristic = {Euler}");
                         output.WriteLine();
-                        output.WriteLine("# 0-Simplices: " + s0);
-                        output.WriteLine("# 1-Simplices: " + s1);
-                        output.WriteLine("# 2-Simplices: " + s2);
-                        output.WriteLine("# 3-Simplices: " + s3);
+                        output.WriteLine($"# 0-Simplices: {s0}");
+                        output.WriteLine($"# 1-Simplices: {s1}");
+                        output.WriteLine($"# 2-Simplices: {s2}");
+                        output.WriteLine($"# 3-Simplices: {s3}");
 
                         output.Flush();
                         output.Close();
@@ -94,20 +94,20 @@ namespace DHGComp1
                     {
                         if (bPrintMatrix)
                         {
-                            output.WriteLine("***0-SIMPLEXES*******" + simp0_list.Count);
+                            output.WriteLine($"***0-SIMPLEXES*******{simp0_list.Count}");
                             int cnt = 0;
                             foreach (Point p in simp0_list)
-                                output.WriteLine((cnt++) + ":  x=" + p.X + ",  y=" + p.Y);
+                                output.WriteLine($"{cnt++} :  x={p.X},  y={p.Y}");
 
-                            output.WriteLine("\r\n***1-SIMPLEXES*******" + Simp1.Count);
+                            output.WriteLine($"\r\n***1-SIMPLEXES*******{Simp1.Count}");
                             foreach (string s in Simp1)
                                 output.WriteLine(s);
 
-                            output.WriteLine("\r\n***2-SIMPLEXES*******" + Simp2.Count);
+                            output.WriteLine($"\r\n***2-SIMPLEXES*******{Simp2.Count}");
                             foreach (string s in Simp2)
                                 output.WriteLine(s);
 
-                            output.WriteLine("\r\n***3-SIMPLEXES*******" + Simp3.Count);
+                            output.WriteLine($"\r\n***3-SIMPLEXES*******{Simp3.Count}");
                             foreach (string s in Simp3)
                                 output.WriteLine(s);
 
@@ -141,7 +141,7 @@ namespace DHGComp1
 
         string GetOrStr(int x, int y)
         {
-            return x > y ? x + ";" + y: y + ";" + x;
+            return x > y ? $"{x};{y}": $"{y};{x}";
         }
 
         public List<string> Find_Simplex1_Adjacency()
@@ -204,7 +204,7 @@ namespace DHGComp1
                         int bt = table[i, j + 1];
 
                         if (rg >= 0 && bt >= 0)
-                            simp2.Add(rg + ";" + px + ";" + bt);
+                            simp2.Add( $"{rg};{px};{bt}");
                     }
 
                     if (i != 0 && j != 0)
@@ -213,7 +213,7 @@ namespace DHGComp1
                         int tp = table[i, j - 1];
 
                         if (lf >= 0 && tp >= 0)
-                            simp2.Add(lf + ";" + px + ";" + tp);
+                            simp2.Add($"{lf};{px};{tp}");
 
                     }
 
@@ -223,7 +223,7 @@ namespace DHGComp1
                         int tp = table[i, j - 1];
 
                         if (rg >= 0 && tp >= 0)
-                            simp2.Add(tp + ";" + px + ";" + rg);
+                            simp2.Add($"{tp};{px};{rg}");
                     }
 
                     if (i != 0 && j != H - 1)
@@ -232,7 +232,7 @@ namespace DHGComp1
                         int bt = table[i, j + 1];
 
                         if (lf >= 0 && bt >= 0)
-                            simp2.Add(bt + ";" + px + ";" + lf);
+                            simp2.Add($"{bt};{px};{lf}");
 
                     }
 
@@ -268,12 +268,12 @@ namespace DHGComp1
 
         public void Boundary_Op1(List<string> simp1_list)
         {
-            int satir = simp1_list.Count;
-            int sutun = simp0_list.Count;
+            int row = simp1_list.Count;
+            int clm = simp0_list.Count;
 
-            int[,] YakSnOp1 = new int[satir, sutun];
+            int[,] BoundOp1 = new int[row, clm];
 
-            for (int i = 0; i < satir; i++)
+            for (int i = 0; i < row; i++)
             {
                 string str = simp1_list[i];
                 string[] ix = str.Split(new char[] { ';' });
@@ -281,13 +281,13 @@ namespace DHGComp1
                 int j1 = int.Parse(ix[0]);
                 int j2 = int.Parse(ix[1]);
 
-                YakSnOp1[i, j1] = -1;
-                YakSnOp1[i, j2] = 1;
+                BoundOp1[i, j1] = -1;
+                BoundOp1[i, j2] = 1;
             }
 
             //*****************************************************************
-            if (bPrintMatrix) PrintMatrix(YakSnOp1, "********** ∂1 ***********");
-            int[,] arr = SmithPoincere(YakSnOp1);
+            if (bPrintMatrix) PrintMatrix(BoundOp1, "********** ∂1 ***********");
+            int[,] arr = SmithPoincere(BoundOp1);
             KerDelta1 = Calc_Kernel_Delta(arr);
             ImDelta1 = Calc_Image_Delta(arr);
             if (bPrintMatrix) PrintMatrix(arr, "\r\n********** REDUCED ∂1 ***********");
@@ -300,7 +300,7 @@ namespace DHGComp1
             int satir = simp2_list.Count;
             int sutun = simp1_list.Count;
 
-            int[,] YakSnOp2 = new int[satir, sutun];
+            int[,] BoundOp2 = new int[satir, sutun];
             for (int i = 0; i < satir; i++)
             {
                 string str = simp2_list[i];
@@ -310,16 +310,16 @@ namespace DHGComp1
                 int n2 = int.Parse(ix[2]);
 
                 int sign = 1;
-                string bi = ix[1] + ";" + ix[2];
+                string bi = $"{ix[1]};{ix[2]}";
                 if (n2 > n1)
                 {
                     sign = -1;
-                    bi = ix[2] + ";" + ix[1];
+                    bi = $"{ix[2]};{ix[1]}";
                 }
 
                 for (int j = 0; j < simp1_list.Count; j++)
                 {
-                    if (bi == simp1_list[j]) YakSnOp2[i, j] = sign;
+                    if (bi == simp1_list[j]) BoundOp2[i, j] = sign;
                 }
 
                 //-------------
@@ -333,7 +333,7 @@ namespace DHGComp1
 
                 for (int j = 0; j < simp1_list.Count; j++)
                 {
-                    if (si == simp1_list[j]) YakSnOp2[i, j] = sign;
+                    if (si == simp1_list[j]) BoundOp2[i, j] = sign;
                 }
 
                 //-------------
@@ -347,14 +347,14 @@ namespace DHGComp1
 
                 for (int j = 0; j < simp1_list.Count; j++)
                 {
-                    if (sb == simp1_list[j]) YakSnOp2[i, j] = sign;
+                    if (sb == simp1_list[j]) BoundOp2[i, j] = sign;
                 }
 
             }
 
             //*********************************************************************
-            if (bPrintMatrix) PrintMatrix(YakSnOp2, "\r\n********** ∂2 ***********");
-            int[,] arr = SmithPoincere(YakSnOp2);
+            if (bPrintMatrix) PrintMatrix(BoundOp2, "\r\n********** ∂2 ***********");
+            int[,] arr = SmithPoincere(BoundOp2);
             KerDelta2 = Calc_Kernel_Delta(arr);
             ImDelta2 = Calc_Image_Delta(arr);
 
@@ -370,20 +370,20 @@ namespace DHGComp1
             int row = simp3_list.Count;
             int clm = simp2_list.Count;
 
-            int[,] YakSnOp3 = new int[row, clm];
+            int[,] BoundOp3 = new int[row, clm];
             for (int i = 0; i < row; i++)
             {
                 string source = simp3_list[i];
                 for (int j = 0; j < clm; j++)
                 {
                     string path = simp2_list[j];
-                    YakSnOp3[i, j] = TestContains(source, path);
+                    BoundOp3[i, j] = TestContains(source, path);
                 }
             }
 
             //********************************************************************
-            if (bPrintMatrix) PrintMatrix(YakSnOp3, "\r\n********** ∂3 ***********");
-            int[,] arr = SmithPoincere(YakSnOp3);
+            if (bPrintMatrix) PrintMatrix(BoundOp3, "\r\n********** ∂3 ***********");
+            int[,] arr = SmithPoincere(BoundOp3);
             KerDelta3 = Calc_Kernel_Delta(arr);
             ImDelta3 = Calc_Image_Delta(arr);
 
@@ -482,29 +482,29 @@ namespace DHGComp1
 
             output.WriteLine("\r\n***RESULTS****");
 
-            output.WriteLine("Rank(H0):" + H0);
-            output.WriteLine("Rank(H1):" + H1);
-            output.WriteLine("Rank(H2):" + H2);
+            output.WriteLine($"Rank(H0):{H0}");
+            output.WriteLine($"Rank(H1):{H1}");
+            output.WriteLine($"Rank(H2):{H2}");
             output.WriteLine();
 
             //****
-            output.WriteLine("Euler Charcteristic = " + (s0 - s1 + s2 - s3));
-            output.WriteLine("# 0-Simplices: " + s0);
-            output.WriteLine("# 1-Simplices: " + s1);
-            output.WriteLine("# 2-Simplices: " + s2);
-            output.WriteLine("# 3-Simplices: " + s3);
+            output.WriteLine($"Euler Charcteristic = {(s0 - s1 + s2 - s3)}");
+            output.WriteLine($"# 0-Simplices: {s0}");
+            output.WriteLine($"# 1-Simplices: {s1}");
+            output.WriteLine($"# 2-Simplices: {s2}");
+            output.WriteLine($"# 3-Simplices: {s3}");
             output.WriteLine();
             //****
 
-            output.WriteLine("Rank(KerDelta0):" + KerDelta0);
-            output.WriteLine("Rank(KerDelta1):" + KerDelta1);
-            output.WriteLine("Rank(KerDelta2):" + KerDelta2);
-            output.WriteLine("Rank(KerDelta3):" + KerDelta3);
+            output.WriteLine($"Rank(KerDelta0):{KerDelta0}");
+            output.WriteLine($"Rank(KerDelta1):{KerDelta1}");
+            output.WriteLine($"Rank(KerDelta2):{KerDelta2}");
+            output.WriteLine($"Rank(KerDelta3):{KerDelta3}");
             output.WriteLine();
-            output.WriteLine("Rank(ImDelta0):" + ImDelta0);
-            output.WriteLine("Rank(ImDelta1):" + ImDelta1);
-            output.WriteLine("Rank(ImDelta2):" + ImDelta2);
-            output.WriteLine("Rank(ImDelta3):" + ImDelta3);
+            output.WriteLine($"Rank(ImDelta0):{ImDelta0}");
+            output.WriteLine($"Rank(ImDelta1):{ImDelta1}");
+            output.WriteLine($"Rank(ImDelta2):{ImDelta2}");
+            output.WriteLine($"Rank(ImDelta3):{ImDelta3}");
 
             output.WriteLine("************************************************\r\n");
 
