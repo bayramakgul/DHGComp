@@ -103,4 +103,10 @@ The program was ported from Windows Forms on .NET Framework 4.5.2 to WPF on .NET
 
 ## License
 
-See [LICENSE](LICENSE).
+DHGComp is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
+
+- You may use, modify and share it for any noncommercial purpose, such as research,
+  teaching and personal study. Universities, public research organizations and
+  government institutions may use it regardless of how they are funded.
+- Commercial use is not permitted under this license. For commercial use, please
+  contact the authors.

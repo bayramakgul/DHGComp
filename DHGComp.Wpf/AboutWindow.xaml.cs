@@ -21,6 +21,8 @@ public partial class AboutWindow : Window
             "\r\n\r\n" +
             "Only allowed to use for personal, academic researches, or educational trainings." +
             "\r\n\r\n" +
-            "DO NOT USE FOR COMMERCIAL PURPOSES!";
+            "DO NOT USE FOR COMMERCIAL PURPOSES!" +
+            "\r\n\r\n" +
+            "License: PolyForm Noncommercial License 1.0.0";
     }
 }
