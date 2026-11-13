@@ -1,0 +1,25 @@
+<Application x:Class="DHGComp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ThemeMode="System"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!-- Status bar chips for the computed values. Fixed light colours with dark text
+             (like the WinForms labels), so they read the same in light and dark mode. -->
+        <SolidColorBrush x:Key="HomologyChipBrush" Color="#D7E4F2" />
+        <SolidColorBrush x:Key="KernelChipBrush" Color="#DDEFD9" />
+        <SolidColorBrush x:Key="ImageChipBrush" Color="#FFF4C4" />
+        <Style x:Key="ResultChip" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#8A8A8A" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="6,1" />
+            <Setter Property="Margin" Value="2,0" />
+        </Style>
+        <Style x:Key="ResultChipText" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#1B1B1B" />
+            <Setter Property="MinWidth" Value="24" />
+        </Style>
+    </Application.Resources>
+</Application>

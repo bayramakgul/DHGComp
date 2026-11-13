@@ -1,0 +1,146 @@
+<Window x:Class="DHGComp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DHGComp"
+        xmlns:core="clr-namespace:DHGComp.Core"
+        xmlns:controls="clr-namespace:DHGComp.Controls"
+        Title="DHG Comp [Vers:1.8]"
+        Icon="Assets/LogoDGH.ico"
+        Width="1180" Height="740" MinWidth="720" MinHeight="460"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
+        AllowDrop="True" DragOver="Window_DragOver" Drop="Window_Drop">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed" />
+        <CommandBinding Command="{x:Static local:MainWindow.CalculateCommand}" CanExecute="Calculate_CanExecute" Executed="Calculate_Executed" />
+    </Window.CommandBindings>
+
+    <Window.Resources>
+        <Style x:Key="Caption" TargetType="TextBlock">
+            <Setter Property="Margin" Value="2,0,0,3" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
+        <Style x:Key="ImageFrame" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="4" />
+        </Style>
+        <!-- Toolbar icons are font glyphs, so they follow the theme colour (light / dark, disabled). -->
+        <Style x:Key="ToolIcon" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- Toolbar: the same commands as the WinForms version, About on the right. -->
+        <DockPanel DockPanel.Dock="Top">
+            <ToolBar DockPanel.Dock="Right" ToolBarTray.IsLocked="True">
+                <Button ToolTip="About" Click="About_Click" AutomationProperties.Name="About">
+                    <TextBlock Text="&#xE946;" Style="{StaticResource ToolIcon}" />
+                </Button>
+            </ToolBar>
+            <ToolBar ToolBarTray.IsLocked="True">
+                <Button Command="ApplicationCommands.Open" ToolTip="Open Image (Ctrl+O)">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xED25;" Style="{StaticResource ToolIcon}" />
+                        <TextBlock Text="Open Image" Margin="6,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button Content="Homology Groups"
+                        Command="{x:Static local:MainWindow.CalculateCommand}"
+                        CommandParameter="{x:Static core:CalcType.Homology}" />
+                <Separator />
+                <Button Content="Only Betti Numbers"
+                        Command="{x:Static local:MainWindow.CalculateCommand}"
+                        CommandParameter="{x:Static core:CalcType.Betti}" />
+                <Separator />
+                <Button Content="Only Euler Characteristic"
+                        Command="{x:Static local:MainWindow.CalculateCommand}"
+                        CommandParameter="{x:Static core:CalcType.Euler}" />
+                <Separator />
+                <CheckBox x:Name="chkPrintMatrices" Content="Print Matrices" VerticalAlignment="Center" Margin="6,0"
+                          Style="{StaticResource {x:Type CheckBox}}"
+                          ToolTip="Write the simplices and the boundary matrices (full and reduced) to the Homology Groups report" />
+            </ToolBar>
+        </DockPanel>
+
+        <!-- Status bar: computed values on the right (laid out first, so they are never cut off),
+             then the progress bar, then image size and threshold, which are shortened if needed. -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem DockPanel.Dock="Right">
+                <StackPanel Orientation="Horizontal">
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource HomologyChipBrush}"><TextBlock x:Name="lblH0" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource HomologyChipBrush}"><TextBlock x:Name="lblH1" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource HomologyChipBrush}" Margin="2,0,10,0"><TextBlock x:Name="lblH2" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource KernelChipBrush}"><TextBlock x:Name="lblKerDelta0" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource KernelChipBrush}"><TextBlock x:Name="lblKerDelta1" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource KernelChipBrush}"><TextBlock x:Name="lblKerDelta2" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource KernelChipBrush}" Margin="2,0,10,0"><TextBlock x:Name="lblKerDelta3" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource ImageChipBrush}"><TextBlock x:Name="lblImDelta0" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource ImageChipBrush}"><TextBlock x:Name="lblImDelta1" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource ImageChipBrush}"><TextBlock x:Name="lblImDelta2" Style="{StaticResource ResultChipText}" /></Border>
+                    <Border Style="{StaticResource ResultChip}" Background="{StaticResource ImageChipBrush}"><TextBlock x:Name="lblImDelta3" Style="{StaticResource ResultChipText}" /></Border>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right">
+                <ProgressBar x:Name="progress" IsIndeterminate="True" Width="100" Height="10" Visibility="Collapsed" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="txtImageInfo" Text="Open an image (Ctrl+O) or drop one here" TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- Left: the four stages of the image. Right: the binary image as a pixel grid. -->
+        <Grid Margin="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="240" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" MinWidth="240" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Row="0" Grid.Column="0" Margin="0,0,3,3">
+                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource Caption}" Text="Original" />
+                    <Border Style="{StaticResource ImageFrame}"><Image x:Name="imgOriginal" Stretch="Uniform" /></Border>
+                </DockPanel>
+                <DockPanel Grid.Row="0" Grid.Column="1" Margin="3,0,0,3">
+                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource Caption}" Text="Threshold 128 (preview)" />
+                    <Border Style="{StaticResource ImageFrame}"><Image x:Name="imgThreshold" Stretch="Uniform" /></Border>
+                </DockPanel>
+                <DockPanel Grid.Row="1" Grid.Column="0" Margin="0,3,3,0">
+                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource Caption}" Text="Grayscale" />
+                    <Border Style="{StaticResource ImageFrame}"><Image x:Name="imgGrayscale" Stretch="Uniform" /></Border>
+                </DockPanel>
+                <DockPanel Grid.Row="1" Grid.Column="1" Margin="3,3,0,0">
+                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource Caption}" Text="Binary image (used for the calculation)" />
+                    <Border Style="{StaticResource ImageFrame}"><Image x:Name="imgBinary" Stretch="Uniform" /></Border>
+                </DockPanel>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" Width="8" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext" Background="Transparent" />
+
+            <DockPanel Grid.Column="2">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource Caption}" Text="Pixel grid: coordinates x,y and vertex number of each black pixel" />
+                <Border Style="{StaticResource ImageFrame}">
+                    <controls:PixelGridView x:Name="pixelGrid" />
+                </Border>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>

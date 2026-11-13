@@ -1,0 +1,8 @@
+# Visual Studio state and build output
+.vs/
+bin/
+obj/
+*.user
+
+# Reports written by the program next to the executable
+*_part.txt

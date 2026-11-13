@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DHGComp</RootNamespace>
+    <AssemblyName>DHGComp</AssemblyName>
+    <ApplicationIcon>Assets\LogoDGH.ico</ApplicationIcon>
+
+    <!-- Shown in the About window (were in Properties\AssemblyInfo.cs). -->
+    <AssemblyTitle>DHGComp 1.8</AssemblyTitle>
+    <Description>Ahmet ÖZTEL, Bayram AKGÜL</Description>
+    <Company>BARTIN University</Company>
+    <Product>DHGComp</Product>
+    <Copyright>Copyright © BARTIN University 2017</Copyright>
+    <Version>1.8.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\*.png" />
+    <Resource Include="Assets\LogoDGH.ico" />
+  </ItemGroup>
+
+</Project>
